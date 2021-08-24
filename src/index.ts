@@ -93,6 +93,7 @@ export function checkHTML(html: string) {
         if (styles) {
             for (let x = 0; x < styles.length; x++) {
                 const [key, value] = styles[x].split(":");
+				if (!key.trim()) continue;
                 if (!allowCssProperties.includes(cssNameToJsName(key.trim()))) {
                     throw new Error(key.trim() + " style is not allowed!")
                 }
