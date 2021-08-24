@@ -1,4 +1,4 @@
-const {checkHTML} = require("./dist");
+const { checkHTML } = require("./dist");
 
 
 
