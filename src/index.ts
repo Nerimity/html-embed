@@ -1,4 +1,12 @@
-import { JSDOM } from 'jsdom'
+let doc: Document;
+if (typeof document === "undefined") {
+	try {
+		const { JSDOM } = require("jsdom")
+		doc = (new JSDOM().window).document
+	} catch(err) {}
+} else {
+	doc = document
+}
 
 
 
@@ -71,9 +79,15 @@ const allowCssProperties = [
 
 
 export function checkHTML(html: string) {
-  const dom = new JSDOM(html);
+  if (!doc) {
+    throw new Error("jsdom is required.")
+  }
+  const mainElement = doc.createElement("body");
+  mainElement.innerHTML = html;
 
-  const tags = dom.window.document.body.getElementsByTagName('*');
+  const tags = mainElement.getElementsByTagName('*');
+
+  
 
   for (let index = 0; index < tags.length; index++) {
     const tag = tags[index];
@@ -101,7 +115,7 @@ export function checkHTML(html: string) {
       }
     }
   }
-  return dom.window.document.body.innerHTML;
+  return mainElement.innerHTML;
 }
 
 function cssNameToJsName(name: string) {
