@@ -4,17 +4,20 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "example": "tsc & node example.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@types/css": "^0.0.33",
+    "@types/stylis": "^4.0.1",
     "typescript": "^4.3.5"
   },
   "dependencies": {
     "css": "^3.0.0",
-    "htm": "^3.1.0"
+    "htm": "^3.1.0",
+    "stylis": "^4.0.10"
   }
 }
