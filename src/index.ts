@@ -1,18 +1,10 @@
-let doc: Document;
-if (typeof document === "undefined") {
-	try {
-		const { JSDOM } = require("jsdom")
-		doc = (new JSDOM().window).document
-	} catch(err) {}
-} else {
-	doc = document
-}
+import htm from 'htm';
+import css from 'css';
 
 
-
-const allowTags = ['DIV', 'IMG', 'SPAN', 'STRONG', 'A']
-const allowAttributes = ["href", "src", "color", "style"]
-const allowCssProperties = [
+const allowedTags = ['div', 'img', 'span', 'strong', 'a', "style"]
+const allowedAttributes = ["href", "src", "color", "style", "class"]
+const allowedCssProperties = [
   "display",
   "position",
   "backgroundColor",
@@ -78,45 +70,63 @@ const allowCssProperties = [
 ]
 
 
-export function checkHTML(html: string) {
-  if (!doc) {
-    throw new Error("jsdom is required.")
+function h(tag: string, props: any, ...children: any[]) {
+  // check if tag is safe
+  if (!allowedTags.includes(tag)) {
+    throw new Error(tag+" tag is not allowed!")
   }
-  const mainElement = doc.createElement("body");
-  mainElement.innerHTML = html;
-
-  const tags = mainElement.getElementsByTagName('*');
-
+  // check if attributes are safe
+  if (props) {
+    const unsafeAttribute = Object.keys(props).find(prop => !allowedAttributes.includes(prop));
+    if (unsafeAttribute) {
+      throw new Error(unsafeAttribute+" attribute is not allowed!")
+    }
+  }
+  // check if styles are safe
+  if (props?.style) {
+    const styles: string[] = props.style.split(";");
+    const unsafeCssProperty = styles.find(style => {
+      if (style === "") return false;
+      const key = style.split(":")[0].trim()
+      return !allowedCssProperties.includes(cssNameToJsName(key))
+    })
+    if (unsafeCssProperty) {
+      throw new Error(unsafeCssProperty.split(":")[0].trim() +" property is not allowed!")
+    }
+  }
+  if (tag === "style") {
+    checkCSS(children[0]);
+  }
   
-
-  for (let index = 0; index < tags.length; index++) {
-    const tag = tags[index];
-    // check if tag is whitelisted
-    if (!allowTags.includes(tag.tagName)) {
-      throw new Error(tag.tagName + " tag is not allowed!")
-    }
-    // check if attribute is whitelisted
-    for (let y = 0; y < tag.attributes.length; y++) {
-      const { name, value } = tag.attributes[y];
-      if (!allowAttributes.includes(name)) {
-        throw new Error(name + " attribute is not allowed!")
-      }
-    }
-    // check styles
-    const styles = tag.getAttribute("style")?.split(";");
-    if (styles) {
-      for (let x = 0; x < styles.length; x++) {
-        const [key, value] = styles[x].split(":");
-        if (!key.trim()) continue;
-        if (!allowCssProperties.includes(cssNameToJsName(key.trim()))) {
-          throw new Error(key.trim() + " style is not allowed!")
-        }
-
-      }
-    }
-  }
-  return mainElement.innerHTML;
+  return { tag, attributes: props, content: children };
 }
+
+const _html = htm.bind(h);
+
+
+
+export function checkHTML(html: string) {
+  return _html([html] as any)
+}
+
+
+
+function checkCSS(cssVal: string) {
+  const rules = css.parse(cssVal).stylesheet?.rules;
+  if (!rules) return;
+  for (let i = 0; i < rules.length; i++) {
+    const rule = rules[i];
+    const declarations = (rule as any).declarations;
+    for (let x = 0; x < declarations.length; x++) {
+      const {property, value} = declarations[x];
+      if (!allowedCssProperties.includes(cssNameToJsName(property))) {
+        throw new Error(property + " style is not allowed!")
+      }
+    }
+    
+  }
+}
+
 
 function cssNameToJsName(name: string) {
   var split = name.split("-");
@@ -128,4 +138,9 @@ function cssNameToJsName(name: string) {
     output += split[i];
   }
   return output;
+}
+
+function jsNameToCssName(name: string)
+{
+    return name.replace(/([A-Z])/g, "-$1").toLowerCase();
 }

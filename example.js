@@ -2,19 +2,16 @@ const { checkHTML } = require("./dist");
 
 
 
-
-// throws error because style could be unsafe.
+// throw error because invalid css
 console.log(checkHTML(`
-<div style="unknown-style: owo;">owo</div>
-`))
+<div class="owo">
+test
+</div>
 
-// throws error
-console.log(checkHTML(`
-<div onclick="alert(1)">owo</div>
-`))
 
-// returns true: is safe to use.
-console.log(checkHTML(`
-<div style="color: red">owo</div>
+<style>
+.owo {
+  colorr: red;
+}
+</style>
 `))
-
