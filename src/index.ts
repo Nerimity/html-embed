@@ -72,7 +72,7 @@ const allowedCssProperties = [
 
 function h(tag: string, props: any, ...children: any[]) {
   // check if tag is safe
-  if (!allowedTags.includes(tag)) {
+  if (!allowedTags.includes(tag.toLowerCase())) {
     throw new Error(tag+" tag is not allowed!")
   }
   // check if attributes are safe
@@ -94,7 +94,7 @@ function h(tag: string, props: any, ...children: any[]) {
       throw new Error(unsafeCssProperty.split(":")[0].trim() +" property is not allowed!")
     }
   }
-  if (tag === "style") {
+  if (tag.toLowerCase() === "style" && children[0]) {
     checkCSS(children[0]);
   }
   
