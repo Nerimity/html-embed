@@ -105,7 +105,7 @@ const _html = htm.bind(h);
 
 
 
-export function checkHTML(html: string) {
+export function htmlToJson(html: string) {
   return _html([html] as any)
 }
 

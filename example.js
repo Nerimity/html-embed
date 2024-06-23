@@ -1,9 +1,9 @@
-const { checkHTML } = require("./dist");
+const { htmlToJson } = require("./dist");
 
 
 
 // throw error because invalid css
-console.log(checkHTML(`
+console.log(htmlToJson(`
 <div class="owo">
 test
 </div>
@@ -11,7 +11,7 @@ test
 
 <style>
 .owo {
-  colorr: red;
+  colorrrrr: red;
 }
 </style>
 `))
