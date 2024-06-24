@@ -7,6 +7,7 @@ const allowedAttributes = ["href", "src", "color", "style", "class"]
 const allowedCssProperties = [
   "display",
   "position",
+  "inset",
   "backgroundColor",
   "backgroundImage",
   "backgroundRepeat",
@@ -87,7 +88,13 @@ function h(tag: string, props: any, ...children: any[]) {
     const styles: string[] = props.style.split(";");
     const unsafeCssProperty = styles.find(style => {
       if (style === "") return false;
-      const key = style.split(":")[0].trim()
+      const keyVal = style.split(":")
+      const key = keyVal[0].trim()
+      const value = keyVal[1].trim()
+      console.log(key, value)
+      if (key === "position" && value === "fixed") {
+        throw new Error(value + " value is not allowed for "+ key + "!")
+      }
       return !allowedCssProperties.includes(cssNameToJsName(key))
     })
     if (unsafeCssProperty) {
@@ -121,6 +128,9 @@ function checkCSS(cssVal: string) {
       const {property, value} = declarations[x];
       if (!allowedCssProperties.includes(cssNameToJsName(property))) {
         throw new Error(property + " style is not allowed!")
+      }
+      if (property === "position" && value === "fixed") {
+        throw new Error(value + " value is not allowed for "+ property + "!")
       }
     }
     
