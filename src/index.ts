@@ -91,7 +91,6 @@ function h(tag: string, props: any, ...children: any[]) {
       const keyVal = style.split(":")
       const key = keyVal[0].trim()
       const value = keyVal[1].trim()
-      console.log(key, value)
       if (key === "position" && value === "fixed") {
         throw new Error(value + " value is not allowed for "+ key + "!")
       }
