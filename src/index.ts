@@ -45,6 +45,7 @@ const allowedCssProperties = [
   "marginLeft",
   "marginRight",
   "flex",
+  "flexWrap",
   "flexShrink",
   "flexDirection",
   "gap",
@@ -65,9 +66,12 @@ const allowedCssProperties = [
   "verticalAlign",
   "lineHeight",
   "backdropFilter",
-  "backgroundClip"
-
-
+  "backgroundClip",
+  "cursor",
+  "overflowX",
+  "overflowY",
+  "userSelect",
+  "pointerEvents",
 ]
 
 
