@@ -6,8 +6,8 @@ const allowedTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'img', 'span', '
 const allowedAttributes = ["href", "src", "color", "style", "class"]
 const allowedCssProperties = [
   "background-clip",
-  "-webkit-background-clip",
-  "-webkit-text-fill-color",
+  "-webkitBackgroundClip",
+  "-webkitTextFillColor",
   "display",
   "position",
   "inset",
@@ -145,13 +145,16 @@ function checkCSS(cssVal: string) {
 
 
 function cssNameToJsName(name: string) {
-  var split = name.split("-");
+  var split = name.split("-").filter(n => n);
   var output = "";
   for (var i = 0; i < split.length; i++) {
     if (i > 0 && split[i].length > 0 && !(i == 1 && split[i] == "ms")) {
-      split[i] = split[i].substr(0, 1).toUpperCase() + split[i].substr(1);
+      split[i] = split[i].substring(0, 1).toUpperCase() + split[i].substring(1);
     }
     output += split[i];
+  }
+  if (name.startsWith("-")) {
+    output = "-" + output
   }
   return output;
 }
