@@ -11,6 +11,7 @@ const allowedCssProperties = [
   "display",
   "position",
   "inset",
+  "background",
   "backgroundColor",
   "backgroundImage",
   "backgroundRepeat",
