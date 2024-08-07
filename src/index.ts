@@ -131,6 +131,11 @@ export function htmlToJson(html: string) {
 
 
 function checkCSS(cssVal: string) {
+  const openCurlyBracketCount = cssVal.match(/{/gi)
+  const closeCurlyBracketCount = cssVal.match(/}/gi)
+  if (openCurlyBracketCount?.length !== closeCurlyBracketCount?.length) {
+    throw new Error("Extra curly or missing curly brackets found in css!")
+  }
   const rules = css.parse(cssVal).stylesheet?.rules;
   if (!rules) return;
   for (let i = 0; i < rules.length; i++) {

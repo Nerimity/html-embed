@@ -6,11 +6,12 @@ const { htmlToJson } = require("./dist");
 console.log(htmlToJson(`
 <div class="owo">
 test
-<a href="https:google.com">test</a>
+<a href="https://google.com">test</a>
 </div>
 
 
 <style>
+
 .owo {
   color: red;
 }
