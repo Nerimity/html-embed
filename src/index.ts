@@ -108,6 +108,11 @@ function h(tag: string, props: any, ...children: any[]) {
       throw new Error(unsafeCssProperty.split(":")[0].trim() +" property is not allowed!")
     }
   }
+  if (props?.href) {
+    if (!props.href.startsWith("http://") && !props.href.startsWith("https://")) {
+      throw new Error("href must start with http:// or https://")
+    }
+  }
   if (tag.toLowerCase() === "style" && children[0]) {
     checkCSS(children[0]);
   }
