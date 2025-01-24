@@ -71,7 +71,7 @@ const allowedCssProperties = [
   "lineHeight",
   "backdropFilter",
   "filter",
-  "object-fit",
+  "objectFit",
   "backgroundClip",
   "cursor",
   "overflowX",
