@@ -70,6 +70,8 @@ const allowedCssProperties = [
   "verticalAlign",
   "lineHeight",
   "backdropFilter",
+  "filter",
+  "object-fit",
   "backgroundClip",
   "cursor",
   "overflowX",
