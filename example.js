@@ -11,7 +11,7 @@ test
 
 
 <style>
-
+}
 .owo {
   color: red;
 }

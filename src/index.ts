@@ -1,5 +1,6 @@
 import htm from 'htm';
 import css from 'css';
+const {validate} = require("csstree-validator")
 
 
 const allowedTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'img', 'span', 'strong', 'a', "style", "p", "ul", "li", "ol", "table", "thead", "tbody", "tr", "td", "th", "blockquote", "pre", "br"]
@@ -133,6 +134,9 @@ export function htmlToJson(html: string) {
 
 
 function checkCSS(cssVal: string) {
+  if (validate(cssVal).length) {
+    throw new Error("Invalid css!")
+  }
   const openCurlyBracketCount = cssVal.match(/{/gi)
   const closeCurlyBracketCount = cssVal.match(/}/gi)
   if (openCurlyBracketCount?.length !== closeCurlyBracketCount?.length) {
