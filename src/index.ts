@@ -3,7 +3,7 @@ import css from 'css';
 const {validate} = require("csstree-validator")
 
 
-const allowedTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'img', 'span', 'strong', 'a', "style", "p", "ul", "li", "ol", "table", "thead", "tbody", "tr", "td", "th", "blockquote", "pre", "br"]
+const allowedTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'img', 'span', 'strong', 'a', "style", "p", "ul", "li", "ol", "table", "thead", "tbody", "tr", "td", "th", "blockquote", "pre", "br", 'b', 'i', 'u', 'em', 'small', 'mark', 'sub', 'sup', 'code', 'hr', 'section', 'article', 'header', 'footer', 'nav'];
 const allowedAttributes = ["href", "src", "color", "style", "class"]
 const allowedCssProperties = [
   "background-clip",
