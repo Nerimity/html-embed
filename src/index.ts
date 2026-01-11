@@ -1,11 +1,13 @@
 import htm from 'htm';
 import css from 'css';
+import * as htmlparser2 from "htmlparser2";
 const {validate} = require("csstree-validator")
 
 
 const allowedTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'img', 'span', 'strong', 'a', "style", "p", "ul", "li", "ol", "table", "thead", "tbody", "tr", "td", "th", "blockquote", "pre", "br", 'b', 'i', 'u', 'em', 'small', 'mark', 'sub', 'sup', 'code', 'hr', 'section', 'article', 'header', 'footer', 'nav'];
 const allowedAttributes = ["href", "src", "color", "style", "class"]
 const allowedCssProperties = [
+  "opacity",
   "background-clip",
   "-webkitBackgroundClip",
   "-webkitTextFillColor",
@@ -128,9 +130,38 @@ const _html = htm.bind(h);
 
 
 export function htmlToJson(html: string) {
+  validateHtmlStructure(html);
   return _html([html] as any)
 }
 
+
+function validateHtmlStructure(html: string) {
+  let isMalformed = false;
+  const parser = new htmlparser2.Parser(
+    {
+      onerror(error) {
+        isMalformed = true;
+      },
+    },
+    { decodeEntities: true, lowerCaseTags: true }
+  );
+
+  parser.write(html);
+  parser.end();
+
+  if (isMalformed) {
+    throw new Error("Invalid HTML structure detected.");
+  }
+
+  const openTags = (html.match(/<[a-zA-Z0-9]+/g) || []).length;
+  const closeTags = (html.match(/<\/[a-zA-Z0-9]+/g) || []).length;
+  
+  const expectedCloseTags = openTags - (html.match(/<(img|br|hr)/g) || []).length;
+
+  if (expectedCloseTags !== closeTags) {
+    throw new Error("Mismatched or unclosed HTML tags.");
+  }
+}
 
 
 function checkCSS(cssVal: string) {
