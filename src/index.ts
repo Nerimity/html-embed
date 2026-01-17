@@ -182,8 +182,18 @@ export function htmlToJson(html: string) {
 
 function validateHtmlStructure(html: string) {
   let isMalformed = false;
+  const voidElements = ["img", "br", "hr", "input", "meta", "link"];
   const parser = new htmlparser2.Parser(
     {
+      onopentag(name) {
+        if (voidElements.includes(name.toLowerCase())) {
+          const tagClosing = html.substring(parser.startIndex, html.indexOf(">", parser.startIndex) + 1);
+          
+          if (!tagClosing.endsWith("/>")) {
+            throw new Error(`The <${name}> tag must be self-closed with a slash (e.g., <${name} />).`);
+          }
+        }
+      },
       onerror(error) {
         isMalformed = true;
       },
@@ -200,11 +210,12 @@ function validateHtmlStructure(html: string) {
 
   const openTags = (html.match(/<[a-zA-Z0-9]+/g) || []).length;
   const closeTags = (html.match(/<\/[a-zA-Z0-9]+/g) || []).length;
-
+  const voidTagsFound = (html.match(/<(img|br|hr|input|meta|link)/g) || []).length;
+  
   const expectedCloseTags =
     openTags - (html.match(/<(img|br|hr)/g) || []).length;
 
-  if (expectedCloseTags !== closeTags) {
+  if (openTags - voidTagsFound !== closeTags) {
     throw new Error("Mismatched or unclosed HTML tags.");
   }
 }

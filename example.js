@@ -4,16 +4,8 @@ const { htmlToJson } = require("./dist");
 
 // throw error because invalid css
 console.log(htmlToJson(`
-<div class="owo">
-test
-<a href="https://google.com">test</a>
-</div>
+<dIv class="owo" style="owo: lol"; onclick="Lol">
+  <br />
+</dIv>
 
-
-<style>
-}
-.owo {
-  color: red;
-}
-</style>
 `))
